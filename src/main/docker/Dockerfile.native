@@ -1,0 +1,33 @@
+####
+# This Dockerfile is used in order to build a container that runs the Quarkus application in native (no JVM) mode
+#
+# Before building the container image run:
+#
+# Génération du fichier binaire executable dans le répertoire target de maven (durée 5 min ici)
+# mvn package -Pnative -Dquarkus.native.container-build=true -DskipTests
+#
+#
+# Then, build the image with:
+#
+# Création de l'image docker minimaliste en copiant le fichier binaire généré
+# docker build -f src/main/docker/Dockerfile.native -t quarkus/digital-cv-demo .
+#
+# Then run the container using:
+#
+#
+# docker create -p 8080:8080 --label digital-cv-demo quarkus/digital-cv-demo
+#
+# docker start -i 88cfd3b3d3279bfb71223ee14a7c0bc0a18d576a89d5d679c74706da42a64db5
+#
+###
+FROM registry.access.redhat.com/ubi8/ubi-minimal:8.1
+WORKDIR /work/
+RUN chown 1001 /work \
+    && chmod "g+rwX" /work \
+    && chown 1001:root /work
+COPY --chown=1001:root target/*-runner /work/application
+
+EXPOSE 8080
+USER 1001
+
+CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]

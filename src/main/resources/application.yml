@@ -1,0 +1,10 @@
+greeting:
+  message: "hello"
+  name: "quarkus"
+quarkus:
+  mongodb:
+    connection-string: mongodb://127.0.0.1:27017
+    #connection-string: mongodb://host.docker.internal:27017
+    database: digitalcv
+  http:
+    port: 8080
